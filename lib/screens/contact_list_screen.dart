@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../services/contact_manager.dart';
+import 'contact_detail_screen.dart';
 import 'contact_form_screen.dart';
 
 class ContactListScreen extends StatelessWidget {
@@ -48,6 +49,16 @@ class ContactListScreen extends StatelessWidget {
                     .phone), // Fügt ein Telefon-Icon vor den Kontaktinformationen ein.
                 title: Text(contact
                     .getFullName()), // Zeigt den vollen Namen des Kontakts an.
+                onTap: () {
+                  // Navigiere zum ContactDetailScreen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ContactDetailScreen(contact: contact),
+                    ),
+                  );
+                },
               ),
             );
           },
