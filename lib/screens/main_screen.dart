@@ -9,12 +9,9 @@ class MainScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blueGrey.shade900,
       ),
-      body: const SafeArea(
+      body: SafeArea(
         child: Center(
-          child: Text(
-            'Hello World',
-            style: TextStyle(fontSize: 24.0),
-          ),
+          child: Container(),
         ),
       ),
     );
