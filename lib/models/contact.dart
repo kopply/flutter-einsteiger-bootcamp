@@ -53,4 +53,8 @@ class Contact {
   String toString() {
     return 'Contact(firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber)';
   }
+
+  String getFullName(){
+    return '$firstName $lastName';
+  }
 }

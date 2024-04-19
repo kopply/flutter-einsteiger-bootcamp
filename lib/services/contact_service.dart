@@ -28,12 +28,14 @@ class ContactService {
     contactsBox = await Hive.openBox<Contact>('contacts');
   }
 
-  List<Contact> getContacts() {
+  Future<List<Contact>> getContacts() async {
     try {
-      return contactsBox.values.toList();
+      // Direktes Rückgeben der Liste, da keine asynchrone Operation benötigt wird,
+      // wenn die Box bereits geöffnet ist.
+      return Future.value(contactsBox.values.toList());
     } catch (e) {
       print('Error retrieving contacts: $e');
-      return [];
+      return []; // Zurückgeben einer leeren Liste im Fehlerfall.
     }
   }
 

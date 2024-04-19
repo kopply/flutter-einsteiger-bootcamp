@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/contact.dart';
-import '../services/contact_service.dart';
+import '../services/contact_manager.dart';
 
 /**
  * Anmerkungen zur Übungs-App:
@@ -33,20 +34,18 @@ import '../services/contact_service.dart';
 
 class ContactFormScreen extends StatefulWidget {
   final Contact initialContact =
-      new Contact(); // Vordefinierter leerer Kontakt.
-  final ContactService contactService;
+      new Contact(); // Initialer leerer Kontakt, der als Vorlage dient.
 
-  ContactFormScreen({super.key, required this.contactService});
+  ContactFormScreen({super.key});
 
   @override
-  _ContactFormScreenState createState() =>
-      _ContactFormScreenState(contactService);
+  _ContactFormScreenState createState() => _ContactFormScreenState();
 }
 
 class _ContactFormScreenState extends State<ContactFormScreen> {
-  final ContactService contactService;
-  final _formKey =
-      GlobalKey<FormState>(); // Key für das Formular zur Validierung.
+  final _formKey = GlobalKey<
+      FormState>(); // Globales Schlüsselobjekt für das Formular zur Validierung.
+
   late TextEditingController _firstNameController =
       TextEditingController(text: widget.initialContact.firstName);
   late TextEditingController _lastNameController =
@@ -54,14 +53,10 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
   late TextEditingController _phoneController =
       TextEditingController(text: widget.initialContact.phoneNumber);
 
-  // Constructor accepting the contactService from the widget
-  _ContactFormScreenState(this.contactService);
-
   @override
   void initState() {
     super.initState();
-
-    // Initialisierung der Controller mit leeren oder vordefinierten Werten.
+    // Initialisiere die Textfeld-Controller mit den initialen Werten des Kontakts oder leeren Strings.
     _firstNameController =
         TextEditingController(text: widget.initialContact.firstName ?? '');
     _lastNameController =
@@ -72,7 +67,7 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
 
   @override
   void dispose() {
-    // Controller müssen bereinigt werden, um Ressourcen freizugeben.
+    // Bereinige die Controller, um Speicherlecks zu vermeiden.
     _firstNameController.dispose();
     _lastNameController.dispose();
     _phoneController.dispose();
@@ -80,31 +75,43 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
   }
 
   void _saveContact() async {
+    // Druckt den aktuellen Kontakt zur Debugging-Zwecke.
+    print('save contact in form: ${widget.initialContact}');
     if (_formKey.currentState!.validate()) {
+      final newContact = Contact(
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+        phoneNumber: _phoneController.text,
+      );
+
+      // Zugriff auf den ContactManager aus dem Provider.
+      final contactManager =
+          Provider.of<ContactManager>(context, listen: false);
+
       try {
-        final newContact = Contact(
-          firstName: _firstNameController.text,
-          lastName: _lastNameController.text,
-          phoneNumber: _phoneController.text,
-        );
+        await contactManager.addContact(newContact);
 
-        await this.contactService.addContact(newContact);
-
+        // Bereinige die Eingabefelder nach erfolgreichem Speichern.
         _firstNameController.clear();
         _lastNameController.clear();
         _phoneController.clear();
         FocusScope.of(context).unfocus();
 
+        // Verlasse die aktuelle Seite und zeige eine Snackbar zur Bestätigung.
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Kontakt gespeichert'),
-              duration: Duration(seconds: 2)),
+            content: Text('Kontakt gespeichert'),
+            duration: Duration(seconds: 2),
+          ),
         );
       } catch (e) {
+        // Zeige eine Fehlermeldung, wenn das Speichern fehlschlägt.
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Fehler beim Speichern des Kontakts'),
-              duration: Duration(seconds: 2)),
+            content: Text('Fehler beim Speichern des Kontakts'),
+            duration: Duration(seconds: 2),
+          ),
         );
       }
     }
@@ -114,7 +121,7 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kontakt erstellen'),
+        title: Text('Kontakt erstellen'), // Titel der Seite
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -126,7 +133,7 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
                 controller: _firstNameController,
                 decoration: InputDecoration(labelText: 'Vorname'),
                 validator: (value) {
-                  // Validierung des Vornamens.
+                  // Validiere den Vornamen auf Nicht-Leerheit.
                   if (value == null || value.isEmpty) {
                     return 'Bitte gib einen Vornamen ein';
                   }
@@ -137,7 +144,7 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
                 controller: _lastNameController,
                 decoration: InputDecoration(labelText: 'Nachname'),
                 validator: (value) {
-                  // Validierung des Nachnamens.
+                  // Validiere den Nachnamen auf Nicht-Leerheit.
                   if (value == null || value.isEmpty) {
                     return 'Bitte gib einen Nachnamen ein';
                   }
@@ -148,7 +155,7 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
                 controller: _phoneController,
                 decoration: InputDecoration(labelText: 'Telefonnummer'),
                 validator: (value) {
-                  // Validierung der Telefonnummer.
+                  // Validiere die Telefonnummer auf Nicht-Leerheit.
                   if (value == null || value.isEmpty) {
                     return 'Bitte gib eine Telefonnummer ein';
                   }
@@ -157,7 +164,8 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _saveContact,
+                onPressed:
+                    _saveContact, // Ruft die Methode zum Speichern des Kontakts auf.
                 child: Text('Save Contact'),
               ),
             ],
