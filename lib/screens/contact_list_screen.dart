@@ -1,7 +1,7 @@
+import 'package:contact_app/services/auth_service.dart';
 import 'package:contact_app/widgets/avatar_with_initials.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../services/contact_manager.dart';
 import 'contact_detail_screen.dart';
 import 'contact_form_screen.dart';
@@ -13,6 +13,7 @@ class ContactListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Greift auf den ContactManager aus dem Provider zu, um Zugang zu den Kontaktdaten zu erhalten.
     final contactManager = Provider.of<ContactManager>(context);
+    final AuthService _authService = AuthService();
 
     return Scaffold(
       backgroundColor:
@@ -31,7 +32,28 @@ class ContactListScreen extends StatelessWidget {
               ).then((_) => contactManager
                   .loadContacts()); // Lädt Kontakte neu, nachdem zur Liste zurückgekehrt wird.
             },
-          )
+          ),
+          IconButton(
+            icon: const Icon(Icons.exit_to_app), // Icon for signing out
+            onPressed: () async {
+              try {
+                await _authService.signOut();
+                // Optionally add a Snackbar or other notification to confirm sign out
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('You have successfully signed out.'),
+                  ),
+                );
+              } catch (e) {
+                // Handle errors, perhaps show a dialog or a Snackbar
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Failed to sign out. Please try again.'),
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
       body: SafeArea(

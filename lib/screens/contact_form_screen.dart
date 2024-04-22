@@ -166,7 +166,7 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
               ElevatedButton(
                 onPressed:
                     _saveContact, // Ruft die Methode zum Speichern des Kontakts auf.
-                child: Text('Save Contact'),
+                child: Text('Kontakt speichern'),
               ),
             ],
           ),
