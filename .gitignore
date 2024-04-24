@@ -1,43 +1,118 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
+# General
 .DS_Store
-.atom/
-.buildlog/
-.history
-.svn/
-migrate_working_dir/
-
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
 .idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+*.iml
+*.pub
+.pub-cache/
+.dart_tool/
+.localhistory
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
 
 # Flutter/Dart/Pub related
 **/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.pub-cache/
-.pub/
+**/flutter/bin/cache/
+build/
+pubspec.lock
+
+# Web related
+**/web/favicon.ico
+**/web/icons/
+**/web/images/
+**/web/splash/
+web/**/original*
+web/**/placeholder
+web/**/index.html.original
+web-service-worker.js
+
+# macOS
+**/.DS_Store
+**/.AppleDouble
+**/.LSOverride
+**/Icon?
+**/._*
+.AppleDouble/
+.LSOverride
+Icon?
+
+# Windows files
+**/Thumbs.db
+**/ehthumbs.db
+**/Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# Android files
+**/android/**/build/
+**/android/**/.gradle
+**/android/**/local.properties
+**/android/.idea/
+.gradle/
 /build/
 
-# Symbolication related
-app.*.symbols
+# iOS files
+**/ios/**/Flutter/Flutter.framework
+**/ios/**/Flutter/Flutter.podspec
+**/ios/**/Flutter/.symlinks/
+**/ios/**/Flutter/Generated.xcconfig
+**/ios/**/Flutter/App.framework
+**/ios/**/Flutter/FlutterPluginRegistrant/
+**/ios/**/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/GeneratedPluginRegistrant.*
+**/ios/Runner.xcworkspace/xcuserdata/
+**/ios/Runner.xcodeproj/xcuserdata/
+**/ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+**/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/
+**/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+**/ios/Runner.xcodeproj/project.pbxproj
+**/ios/Runner.xcodeproj/xcshareddata/
+.derivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
 
-# Obfuscation related
-app.*.map.json
+# Temp files
+**/*.swp
+**/*.bak
+**/*~.nib
+**/*.tmp
+**/*.swp
+**/*.swo
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# Others
+**/.atom/
+**/.ninja
+**/.history
+**/.vscode/
+**/.vs/
+**/*.sln
+**/*.suo
+**/*.user
+**/*.userprefs
+**/*.unityproj
+**/*.pidb
+**/*.svclog
+**/*.scc
+**/*.opensdf
+**/*.sdf
+**/*.cachefile
+**/*.VC.db
+
+# Exclude all log files
+*.log
+
+# Fuchsia files
+.fuchsia
