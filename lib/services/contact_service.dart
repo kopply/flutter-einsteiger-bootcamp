@@ -1,5 +1,5 @@
-import 'package:hive/hive.dart';
-
+import 'package:contact_app/services/auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/contact.dart';
 
 /**
@@ -21,29 +21,38 @@ import '../models/contact.dart';
  *   und zur Erhöhung der Testbarkeit und Modularität des Codes.
  */
 class ContactService {
-  late Box<Contact> contactsBox;
-
-  Future<void> init() async {
-    Hive.registerAdapter(ContactAdapter());
-    contactsBox = await Hive.openBox<Contact>('contacts');
-  }
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final AuthService _authService = AuthService();
 
   Future<List<Contact>> getContacts() async {
     try {
-      // Direktes Rückgeben der Liste, da keine asynchrone Operation benötigt wird,
-      // wenn die Box bereits geöffnet ist.
-      return Future.value(contactsBox.values.toList());
+      String? userId = _authService.getUserId();
+      if (userId == null) throw Exception('User not logged in');
+      QuerySnapshot snapshot = await _firestore
+          .collection('contacts')
+          .doc(userId)
+          .collection('userContacts')
+          .get();
+      return snapshot.docs
+          .map((doc) => Contact.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
     } catch (e) {
-      print('Error retrieving contacts: $e');
-      return []; // Zurückgeben einer leeren Liste im Fehlerfall.
+      print('Error, kann keine Kontakte laden: $e');
+      return [];
     }
   }
 
   Future<void> addContact(Contact contact) async {
+    String? userId = _authService.getUserId();
+    if (userId == null) throw Exception('User not logged in');
     try {
-      await contactsBox.add(contact);
+      await _firestore
+          .collection('contacts')
+          .doc(userId)
+          .collection('userContacts')
+          .add(contact.toMap());
     } catch (e) {
-      print('Error adding contact: $e');
+      print('Error, kann keinen neuen Kontakt anlegen: $e');
       rethrow;
     }
   }

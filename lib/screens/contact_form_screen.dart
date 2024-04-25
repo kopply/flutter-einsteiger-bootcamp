@@ -109,7 +109,7 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
         // Zeige eine Fehlermeldung, wenn das Speichern fehlschlägt.
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Fehler beim Speichern des Kontakts'),
+            content: Text('Fehler beim Speichern des Kontakts $e'),
             duration: Duration(seconds: 2),
           ),
         );

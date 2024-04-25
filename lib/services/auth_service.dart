@@ -14,7 +14,7 @@ class AuthService {
           email: email, password: password);
       return result.user;
     } catch (e) {
-      throw Exception("Failed to sign in: $e");
+      throw Exception("Kann nutzer nicht einloggen: $e");
     }
   }
 
@@ -26,12 +26,17 @@ class AuthService {
           .createUserWithEmailAndPassword(email: email, password: password);
       return result.user;
     } catch (e) {
-      throw Exception("Failed to sign up: $e");
+      throw Exception("Kann User nicht anlegen: $e");
     }
   }
 
   // Sign out
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+  }
+
+  // Returns the ID from the firebase user
+  String? getUserId() {
+    return _firebaseAuth.currentUser?.uid;
   }
 }
